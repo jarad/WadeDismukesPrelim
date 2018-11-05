@@ -1,0 +1,166 @@
+\documentclass{article}
+
+\usepackage{fullpage}
+\usepackage{natbib}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\begin{document}
+
+You are free to use any resources you have or are available to you, 
+e.g. textbooks, websites, etc.
+The one exception is that you are not allowed help from any individual 
+including posting a question on a discussion board and receiving an answer 
+there.
+For any external material you use, please provide a reference for that 
+material.
+In case it is useful, a \LaTeX version of this question is available at 
+\url{https://github.com/jarad/WadeDismukesPrelim}.
+
+\begin{enumerate}
+\item This question stems from the following statement in your thesis proposal:
+\begin{quote}
+``the probability of gene trees $P(G|S,\tau,\sigma,\lambda,\mu)$ .... 
+This method has both a Bayesian and a likelihood implementation...''
+\end{quote}
+The intent of this question is to formalize the use of the term 
+\emph{probability}.
+
+\begin{enumerate}
+\item Probability interpretations:
+  \begin{enumerate}
+  \item State a Bayesian interpretation of probability.
+  \item State a frequentist interpretation of probability.
+  \item State any other interpretation(s) of probability that you know.
+  If you prefer one of these interpretations, feel free to include it in the 
+  interpretations below.
+  \end{enumerate}
+  
+\item The most common example of Bayes' Rule uses diagnostic testing, 
+i.e. 
+\[
+P(D|+) = \frac{P(+|D)P(D)}{P(+|D)P(D) + P(+|N)P(N)}
+\]
+where $+$ ($-$) indicates a positive (negative) result on a diagnostic test and 
+$D$ ($N$) indicate the individual has (does not have) the disease.
+
+\begin{enumerate}
+\item Provide a Bayesian interpretation of the terms $P(D)$ and $P(D|+)$.
+\item Provide a fequentist interpretation of the terms $P(D)$ and $P(D|+)$. 
+\end{enumerate}
+
+\item Let's suppose we would like a conditional probability based on our test
+patient being male. 
+
+\begin{enumerate}
+\item Write the Bayes' Rule for the desired conditional probability $P(D|+,M)$
+where $M$ indicates the tested patient is male.
+\item Provide a Bayesian interpretation for $P(D|+,M)$.
+\item Provide a frequentist interpretation for $P(D|+,M)$.
+\end{enumerate}
+
+\item Let's suppose we would like a conditional probability based on the male 
+test patient being 31.2 years old. 
+
+\begin{enumerate}
+% \item Write the Bayes' Rule for the desired conditional probability $P(D|+,M,A)$
+% where $A$ indicates the patient is 31.2 years old.
+\item Provide a Bayesian interpretation for $P(D|+,M,A)$.
+\item Provide a frequentist interpretation for $P(D|+,M,A)$.
+\end{enumerate}
+
+\item In our electronic medical records, we have a lot more information about
+this patient including history of visits, blood tests, diagnosis, etc. 
+We would really like to conditional on all of this information. 
+
+\begin{enumerate}
+% \item Write the Bayes' Rule for the desired conditional probability $P(D|+,H)$
+% where $H$ indicates all of our information about this patient.
+\item Provide a Bayesian interpretation for $P(D|+,H)$. What issues do you see with this interpretation?
+\item Provide a frequentist interpretation for $P(D|+,H)$. What issues do you see with this interpretation?
+\end{enumerate}
+
+\item Probability of gene trees, $P(G|S,\tau,\sigma,\lambda,\mu)$:
+
+\begin{enumerate}
+\item How many possible gene trees are there: finite, countably infinite, 
+uncountably infinite? Justify your answer.
+\item Provide a Bayesian interpretation for $P(G|S,\tau,\sigma,\lambda,\mu)$. What issues do you see with this interpretation?
+\item Provide a frequentist interpretation for $P(G|S,\tau,\sigma,\lambda,\mu)$. What issues do you see with this interpretation?
+\end{enumerate}
+
+\end{enumerate}
+
+
+
+
+\newpage
+\item This question stems from the following statement in your thesis proposal:
+\begin{quote}
+``I will develop posterior predictive approaches ...''
+\end{quote}
+For the following questions assume $Y_i \stackrel{ind}{\sim} N(\mu,\sigma^2)$
+and $p(\mu,\sigma^2) \propto 1/\sigma^2$.
+Whereever you deem necessary, assume you observe $n=25$, $\overline{y} = 0.25$, and $s=1.2$.
+
+The posterior preditive methodology requires the specification of a test 
+quantity $T(y,\theta)$
+where $y=(y_1,\ldots,y_n)$ represents your data and $\theta$ are model parameters
+\citep[Sec.~6.2]{gelman2013bayesian}.
+The posterior predictive $p$-value is defined as 
+\begin{equation}
+p = P(T(y^{rep},\theta) \ge T(y,\theta)|y) \label{e:p}
+\end{equation}
+where $y^{rep}=(y^{rep}_1,\ldots,y^{rep}_n)$ are samples from the distribution
+\[ 
+p(y^{rep}|y) = \int \int \prod_{i=1}^n N(y^{rep}_i;\mu,\sigma^2) p(\mu,\sigma^2|y)\, d\mu\, d\sigma^2
+\]
+where $N(\cdot;\mu,\sigma^2)$ indicates a normal density with mean $\mu$ and 
+variance $\sigma^2$.
+
+
+
+
+\begin{enumerate}
+\item Given the data model and prior above, what is the joint posterior $p(\mu,\sigma^2|y)$?
+\item Describe an algorithm to sample from $p(y^{rep}|y)$.
+\item Why is $T(y,\theta)$ a \emph{test quantity} and not a \emph{test statistic}?
+\item In order to test the assumption that $\mu=0$, you define 
+\[ T(y,\theta) = \frac{\overline{y}}{s/\sqrt{n}} \]
+where $\overline{y}$ and $s$ are the sample mean and sample standard deviation,
+respectively.
+  \begin{enumerate}
+  \item What is the distribution of $T(y^{rep},\theta)$?
+  \item What is the distribution of $p$ as defined in \eqref{e:p}?
+  \item Describe and present results from a {\bf simple} simulation study to support your use
+  of this test quantity and posterior predictive $p$-values to assess this assumption.
+  \end{enumerate}
+\item Consider testing the assumption $\sigma=1$. 
+  \begin{enumerate}
+  \item Define a test quantity $T(y^{rep},\theta)$ to test this assumption. Justify this choice.
+  \item What is the distribution for $p$?
+  \item Describe and present results from a {\bf simple} simulation study to support your use
+  of this test quantity and posterior predictive $p$-values to assess this assumption.
+  \end{enumerate}
+\item Consider testing the independence assumption. 
+  \begin{enumerate}
+  \item Define a test quantity $T(y^{rep},\theta)$ to test this assumption. Justify this choice.
+  \item What is the distribution for $p$?
+  \item Describe and present results from a {\bf simple} simulation study to support your use
+  of this test quantity and posterior predictive $p$-values to assess this assumption.
+  \end{enumerate}
+
+\end{enumerate}
+
+
+
+
+
+\end{enumerate}
+
+
+\bibliographystyle{te}
+\bibliography{refs}
+
+
+\end{document}
