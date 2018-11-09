@@ -7,7 +7,6 @@
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
-%\SweaveOpts{concordance=TRUE}
 
 You are free to use any resources you have or are available to you, 
 e.g. textbooks, websites, etc.
@@ -147,7 +146,7 @@ The Bayesian method actually calculates $P(\tau,\sigma, \lambda, \mu | G, S)$, t
 
 \item Provide a frequentist interpretation for $P(G|S,\tau,\sigma,\lambda,\mu)$. What issues do you see with this interpretation?
 
-This is the relative frequency that we observe a gene tree given the species tree. One issue with this is that we have finitely many gene trees, and so the interpretation of the probability is suspect as we are, as in ()
+This is the relative frequency that we observe a gene tree given the species tree. One issue with this is that we have finitely many gene trees, and so the interpretation of the probability is suspect as we could be, as in part (d and e) of this question, dealing with a small subpopulation of all possible gene trees. 
 
 \end{enumerate}
 
@@ -186,7 +185,6 @@ variance $\sigma^2$.
 \begin{enumerate}
 \item Given the data model and prior above, what is the joint posterior $p(\mu,\sigma^2|y)$?
 
-\begin{equation}
 	\begin{align}
 		p(\mu, \sigma^2 | y) & \propto \prod_{i=1}^{n} p(y_i | \mu, \sigma^2) \times p(\mu, \sigma^2) \\
 			& \propto \left(\frac{1}{\sigma^2}\right)^{n/2} exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - \mu)^2\right) \times \left(\frac{1}{\sigma^2}\right) \\
@@ -194,7 +192,6 @@ variance $\sigma^2$.
 			& \propto \left(\frac{1}{\sigma^2}\right)^{n/2+1} exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - \bar{y})^2 + (\bar{y} - \mu)^2\right) \\
 			& \propto \left(\frac{1}{\sigma^2}\right)^{n/2+1} exp\left(-\frac{1}{2\sigma^2} ((n-1)s^2 + n(\bar{y} - \mu)^2\right) \\
 	\end{align}
-\end{equation} 
 
 
 
@@ -206,7 +203,7 @@ To sample from $p(y^{rep} | y)$ the following steps are taken:
 	\begin{enumerate}
 		\item Sample $\sigma^2$ from $\sigma^2 |y \sim Inv-\chi^2(n-1, s^2)$
 		\item Using $\sigma^2$ sampled in step (i), Sample $\mu$ from $\mu | \sigma^2, y \sim N(\bar{y}, \sigma^2/n)$.
-		\item Using the $(\mu, \sigma2)$ sample $n$ values of $y^{rep}$ from $N(y^{rep}_i;\mu,\sigma^2)$	
+		\item Using the $(\mu, \sigma^2)$ sample $n$ values of $y^{rep}$ from $N(y^{rep}_i;\mu,\sigma^2)$	
 	\end{enumerate}
 \item Why is $T(y,\theta)$ a \emph{test quantity} and not a \emph{test statistic}?
 
@@ -234,49 +231,78 @@ Define $x=((n-1)s^2 + n(\bar{y} - \mu)^2)/(2\sigma^2)$, then
 					& \propto ((n-1)s^2 + n(\bar{y} - \mu)^2)^{-n/2} \\
 					& \propto \left( 1 + \frac{n(\mu - \bar{y}^2)}{(n-1)s^2}\right)^{-n/2}
 		\end{align}	
-	Which is the kernel of the $t_{n-1}(\bar{y}, s^2 / n)$ distribution.
+	Which is the $t_{n-1}(\bar{y}, s^2 / n)$ distribution.
 	
-	Since we now now that $\mu \sim t_{n-1}(\bar{y}, s^2 / n)$ which is equivalent $\frac{\mu - \bar{y}}{s/\sqrt{n}}\sim t_{n-1}(0, 1) $ so if we draw samples from $p(y | \mu, \sigma^2)$ then $\frac{\bar{y} - \mu}{s/\sqrt{n}}\sim t_{n-1}(0, 1)$ which is the distribution of $T(y^{rep},\theta)$.
+	Since we now now that $\mu \sim t_{n-1}(\bar{y}, s^2 / n)$ and this is equivalent to $\frac{\mu - \bar{y}}{s/\sqrt{n}}\sim t_{n-1}(0, 1) $ so if we draw samples from $p(y | \mu, \sigma^2)$ then $\frac{\bar{y} - \mu}{s/\sqrt{n}}\sim t_{n-1}(0, 1)$ which is the distribution of $T(y^{rep},\theta)$.
 	
   \item What is the distribution of $p$ as defined in \eqref{e:p}?
   \item Describe and present results from a {\bf simple} simulation study to support your use
   of this test quantity and posterior predictive $p$-values to assess this assumption.
 
-<<>>=
-suppressWarnings(library(LaplacesDemon))
+<<fig=TRUE>>=
+suppressWarnings(library(asbio))
+
 n <- 25
 ybar <- 0.25
 s <- 1.2
-sigma2 <- rinvchisq(1, 24, scale=1.2^2)
-mu <- rnorm(1, ybar, sigma2 /25)
-yrep <- rnorm(n, mu, sigma2)
-
 
 test_quant <- function(yrep){
   ybar_rep <- mean(yrep)
   ybar_s <- sqrt(var(yrep))
-  return(ybar_rep / (ybar_s / sqrt(length(yrep))))
+  return(ybar_rep / (ybar_s / sqrt(n)))
 }
-tqs <- vector(length = 1000)
+
+tqs <- vector(length = 10000)
 for(i in 1:length(tqs)){
   sigma2 <- rinvchisq(1, 24, scale=1.2^2)
-  mu <- rnorm(1, ybar, sigma2 /25)
-  yrep <- rnorm(n, mu, sigma2)
+  #mu <- rnorm(1, ybar, sigma2 /25)
+  yrep <- rnorm(n, 0, sigma2)
   tqs[i] <- test_quant(yrep)
 }
-
-empirical_test_quantity <- (ybar - 1) / (s/sqrt(n))
-
-hist(tqs) + abline(v = empirical_test_quantity, col = "red")
+empirical_test_quantity <- (ybar) / (s/sqrt(n)) 
+length(which(tqs >= empirical_test_quantity)) / length(tqs) # p value
+hist(tqs) 
+abline(v=empirical_test_quantity)
 @
+  
   
   \end{enumerate}
 \item Consider testing the assumption $\sigma=1$. 
   \begin{enumerate}
   \item Define a test quantity $T(y^{rep},\theta)$ to test this assumption. Justify this choice.
+  
+    Let $T(y^{rep}, \theta) = (1+1/n)^{1/2}s$. This is the scale parameter of the posterior predictive distribution, if our predictive data has $T(y^rep, \theta)$ near $1$ then this will inform us that the assumption of $\sigma = 1$ is plausible.
+    
   \item What is the distribution for $p$?
   \item Describe and present results from a {\bf simple} simulation study to support your use
   of this test quantity and posterior predictive $p$-values to assess this assumption.
+  
+<<fig=TRUE>>=
+
+n <- 25
+ybar <- 0.25
+s <- 1.2
+
+
+test_quant2 <- function(yrep, n){ return(sqrt((1+1/n))*sqrt(var(yrep)))}
+
+tqs <- vector(length = 1000)
+for(i in 1:length(tqs)){
+  #sigma2 <- rinvchisq(1, 24, scale=1.2^2)
+  mu <- rnorm(1, ybar, 1 /25)
+  yrep <- rnorm(n, mu, 1)
+  tqs[i] <- test_quant2(yrep, n)
+}
+mean(tqs)
+empirical_test_quantity <- sqrt((1+1/n))*s
+length(which(tqs >= empirical_test_quantity)) / length(tqs) # p value
+
+hist(tqs) 
+abline(v=empirical_test_quantity)
+@
+
+
+
   \end{enumerate}
 \item Consider testing the independence assumption. 
   \begin{enumerate}
