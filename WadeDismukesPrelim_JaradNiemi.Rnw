@@ -6,6 +6,7 @@
 \usepackage{hyperref}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 You are free to use any resources you have or are available to you, 
 e.g. textbooks, websites, etc.
@@ -30,10 +31,21 @@ The intent of this question is to formalize the use of the term
 \item Probability interpretations:
   \begin{enumerate}
   \item State a Bayesian interpretation of probability.
+  	
+  	Probability is a numerical measure of uncertainty \citep{gelman2013bayesian}. 
+  	In other words, probability is a measure of our degree of belief that an outcome will occur, and our previous knowledge can influence our belief in how certain that we are in an outcome.
+  	
+  	
   \item State a frequentist interpretation of probability.
+  
+	Probability is the relative frequency of a particular outcome if we were to independently repeat the experiment producing that outcomes a large number of times \citep{gelman2013bayesian}.
+
   \item State any other interpretation(s) of probability that you know.
   If you prefer one of these interpretations, feel free to include it in the 
   interpretations below.
+  
+  The classical interpretation of probability, as defined by \citet{miller2014john}, applies when there are $N$ equally likely outcomes. The probability then is quantified as the number of times one of the possible outcomes could happen divided by the total possible outcomes.
+  
   \end{enumerate}
   
 \item The most common example of Bayes' Rule uses diagnostic testing, 
@@ -46,7 +58,16 @@ $D$ ($N$) indicate the individual has (does not have) the disease.
 
 \begin{enumerate}
 \item Provide a Bayesian interpretation of the terms $P(D)$ and $P(D|+)$.
-\item Provide a fequentist interpretation of the terms $P(D)$ and $P(D|+)$. 
+
+	$P(D)$ can be interpreted as our belief about the prevalence of the disease.
+	$P(D|+)$ can be interpreted as how certain we are a person has the disease given our knowledge of the disease's prevalence $P(D)$ and the data about how likely a positive result is that we have obtained in an experiment, through $P(+|D)$.
+
+\item Provide a frequentist interpretation of the terms $P(D)$ and $P(D|+)$. 
+
+	$P(D)$ is the proportion of people in the population who have the disease, and thus defines the probability that this randomly selected person will have this disease given the number of total people who have the disease in the population.
+	$P(D|+)$ is the relative frequency of people have obtained a positive result and have the disease.
+	 
+	
 \end{enumerate}
 
 \item Let's suppose we would like a conditional probability based on our test
@@ -55,8 +76,19 @@ patient being male.
 \begin{enumerate}
 \item Write the Bayes' Rule for the desired conditional probability $P(D|+,M)$
 where $M$ indicates the tested patient is male.
+
+	\[
+	 P(D | +, M) = \frac{P(+| D, M) P (D | M)}{P(+| M)}
+	\]
+
 \item Provide a Bayesian interpretation for $P(D|+,M)$.
+
+$P(D|+,M)$ gives a degree of belief that a person has a disease given our prior belief how prevalent the disease is among males or how much it might effect that population, combined with the data we have obtained about the positive test results among males that have the disease.
+
 \item Provide a frequentist interpretation for $P(D|+,M)$.
+
+The frequentist interpretation of $P(D|+,M)$ is that this is the relative frequency of the disease in the subpopulation of males that has tested positive for the disease.
+
 \end{enumerate}
 
 \item Let's suppose we would like a conditional probability based on the male 
@@ -66,7 +98,13 @@ test patient being 31.2 years old.
 % \item Write the Bayes' Rule for the desired conditional probability $P(D|+,M,A)$
 % where $A$ indicates the patient is 31.2 years old.
 \item Provide a Bayesian interpretation for $P(D|+,M,A)$.
+
+	This is our degree of belief about whether an individual has the disease given our knowledge about how the disease affects of has affected males of age 31.2 years combined with the data about the number of positive results within males of age 31.2 years who have the disease.
+
 \item Provide a frequentist interpretation for $P(D|+,M,A)$.
+
+	This is the relative frequency of the even narrower subpopulation of males who have tested positive for the disease and who are also 31.2 years old.
+
 \end{enumerate}
 
 \item In our electronic medical records, we have a lot more information about
@@ -77,7 +115,16 @@ We would really like to conditional on all of this information.
 % \item Write the Bayes' Rule for the desired conditional probability $P(D|+,H)$
 % where $H$ indicates all of our information about this patient.
 \item Provide a Bayesian interpretation for $P(D|+,H)$. What issues do you see with this interpretation?
+
+	This can be interpreted as what we believe about a single person who has tested positive having the disease.
+	The issue here is that we cannot update our prior belief that much because there is only a single datum with which we can update our belief.
+
 \item Provide a frequentist interpretation for $P(D|+,H)$. What issues do you see with this interpretation?
+	
+	$P(D|+,H)$ can be interpreted as the relative frequency of people who have the disease and have that specific medical history and who received a positive result.
+	The problem with this interpretation is that as we specify more conditions this probability eventual will become about a single person.
+	In other words, we are no longer making a probability statement about a population (or subpopulation), but instead we are discussing a single individual.
+	
 \end{enumerate}
 
 \item Probability of gene trees, $P(G|S,\tau,\sigma,\lambda,\mu)$:
@@ -85,8 +132,22 @@ We would really like to conditional on all of this information.
 \begin{enumerate}
 \item How many possible gene trees are there: finite, countably infinite, 
 uncountably infinite? Justify your answer.
+
+There are finitely many gene trees. 
+This must be true as there are a finite amount of genes within genomes, and some of these genes are singletons (i.e. they exist in only a single species) thus the singleton's evolution cannot be described using a bifurcating tree.
+Those that are not singletons can be used to build gene trees.
+
+
 \item Provide a Bayesian interpretation for $P(G|S,\tau,\sigma,\lambda,\mu)$. What issues do you see with this interpretation?
+
+This can be interpreted as meaning how much uncertainty that we have about a set of gene trees given a species tree that is treated as data, and our knowledge about how often the rates $\tau, \sigma, \lambda, \mu$ occur.
+Another issue with this is that the gene trees are being used as data in this method so this is really a statement about how we believe that this data is being generated.
+The Bayesian method actually calculates $P(\tau,\sigma, \lambda, \mu | G, S)$, this was a mistake in the proposal that I overlooked.
+
 \item Provide a frequentist interpretation for $P(G|S,\tau,\sigma,\lambda,\mu)$. What issues do you see with this interpretation?
+
+This is the relative frequency that we observe a gene tree given the species tree. One issue with this is that we have finitely many gene trees, and so the interpretation of the probability is suspect as we could be, as in part (d and e) of this question, dealing with a small subpopulation of all possible gene trees. 
+
 \end{enumerate}
 
 \end{enumerate}
@@ -103,7 +164,7 @@ For the following questions assume $Y_i \stackrel{ind}{\sim} N(\mu,\sigma^2)$
 and $p(\mu,\sigma^2) \propto 1/\sigma^2$.
 Whereever you deem necessary, assume you observe $n=25$, $\overline{y} = 0.25$, and $s=1.2$.
 
-The posterior preditive methodology requires the specification of a test 
+The posterior predictive methodology requires the specification of a test 
 quantity $T(y,\theta)$
 where $y=(y_1,\ldots,y_n)$ represents your data and $\theta$ are model parameters
 \citep[Sec.~6.2]{gelman2013bayesian}.
@@ -123,24 +184,125 @@ variance $\sigma^2$.
 
 \begin{enumerate}
 \item Given the data model and prior above, what is the joint posterior $p(\mu,\sigma^2|y)$?
+
+	\begin{align}
+		p(\mu, \sigma^2 | y) & \propto \prod_{i=1}^{n} p(y_i | \mu, \sigma^2) \times p(\mu, \sigma^2) \\
+			& \propto \left(\frac{1}{\sigma^2}\right)^{n/2} exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - \mu)^2\right) \times \left(\frac{1}{\sigma^2}\right) \\
+			& \propto \left(\frac{1}{\sigma^2}\right)^{n/2+1} exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - \bar{y} + \bar{y} - \mu)^2\right) \\
+			& \propto \left(\frac{1}{\sigma^2}\right)^{n/2+1} exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - \bar{y})^2 + (\bar{y} - \mu)^2\right) \\
+			& \propto \left(\frac{1}{\sigma^2}\right)^{n/2+1} exp\left(-\frac{1}{2\sigma^2} ((n-1)s^2 + n(\bar{y} - \mu)^2\right) \\
+	\end{align}
+
+
+
+
 \item Describe an algorithm to sample from $p(y^{rep}|y)$.
+
+I am using the results from $\citet{gelman2013bayesian}$ sec 3.2 for the marginal posterior distributions of $\sigma^2$ and $\mu$
+To sample from $p(y^{rep} | y)$ the following steps are taken:
+	\begin{enumerate}
+		\item Sample $\sigma^2$ from $\sigma^2 |y \sim Inv-\chi^2(n-1, s^2)$
+		\item Using $\sigma^2$ sampled in step (i), Sample $\mu$ from $\mu | \sigma^2, y \sim N(\bar{y}, \sigma^2/n)$.
+		\item Using the $(\mu, \sigma^2)$ sample $n$ values of $y^{rep}$ from $N(y^{rep}_i;\mu,\sigma^2)$	
+	\end{enumerate}
 \item Why is $T(y,\theta)$ a \emph{test quantity} and not a \emph{test statistic}?
+
+$T(y, \theta)$ is a test quantity because it is summary of model parameters and the data. 
+A test statistic is a test quantity that depends only on the data. 
+
 \item In order to test the assumption that $\mu=0$, you define 
 \[ T(y,\theta) = \frac{\overline{y}}{s/\sqrt{n}} \]
 where $\overline{y}$ and $s$ are the sample mean and sample standard deviation,
 respectively.
   \begin{enumerate}
   \item What is the distribution of $T(y^{rep},\theta)$?
+  
+  Since this quantity depends only on $\mu$ we need only determine the distribution of $p(\mu|y^{rep})$ then we can use this to determine the distribution of $T(y^{rep},\theta)$ using sampling theory. 
+  	 
+
+		\begin{align}
+     	p(\mu | y ) & =  \int_0^{\infty} p(\mu,\sigma^2 | y^{rep}) d\sigma^2 \\
+     				& = \int_0^{\infty} \left(\frac{1}{2\pi\sigma^2}\right)^{n/2+1} exp\left(-\frac{1}{2\sigma^2} ((n-1)s^2 + n(\bar{y} - \mu)^2\right) d\sigma^2 \\
+		\end{align}	
+	
+Define $x=((n-1)s^2 + n(\bar{y} - \mu)^2)/(2\sigma^2)$, then
+		\begin{align}
+		p(\mu | y ) & \propto ((n-1)s^2 + n(\bar{y} - \mu)^2)^{-n/2}\int_0^{\infty} x^{n/2+2-1} exp(-x)dx \\
+					& \propto ((n-1)s^2 + n(\bar{y} - \mu)^2)^{-n/2} \\
+					& \propto \left( 1 + \frac{n(\mu - \bar{y}^2)}{(n-1)s^2}\right)^{-n/2}
+		\end{align}	
+	Which is the $t_{n-1}(\bar{y}, s^2 / n)$ distribution.
+	
+	Since we now now that $\mu \sim t_{n-1}(\bar{y}, s^2 / n)$ and this is equivalent to $\frac{\mu - \bar{y}}{s/\sqrt{n}}\sim t_{n-1}(0, 1) $ so if we draw samples from $p(y | \mu, \sigma^2)$ then $\frac{\bar{y} - \mu}{s/\sqrt{n}}\sim t_{n-1}(0, 1)$ which is the distribution of $T(y^{rep},\theta)$.
+	
   \item What is the distribution of $p$ as defined in \eqref{e:p}?
   \item Describe and present results from a {\bf simple} simulation study to support your use
   of this test quantity and posterior predictive $p$-values to assess this assumption.
+
+<<fig=TRUE>>=
+suppressWarnings(library(asbio))
+
+n <- 25
+ybar <- 0.25
+s <- 1.2
+
+test_quant <- function(yrep){
+  ybar_rep <- mean(yrep)
+  yrep_s <- sqrt(var(yrep))
+  return(ybar_rep / (yrep_s / sqrt(n)))
+}
+
+tqs <- vector(length = 10000)
+for(i in 1:length(tqs)){
+  sigma2 <- rinvchisq(1, 24, scale=1.2^2)
+  #mu <- rnorm(1, ybar, sigma2 /25)
+  yrep <- rnorm(n, 0, sigma2)
+  tqs[i] <- test_quant(yrep)
+}
+empirical_test_quantity <- (ybar) / (s/sqrt(n)) 
+length(which(tqs >= empirical_test_quantity)) / length(tqs) # p value
+hist(tqs) 
+abline(v=empirical_test_quantity)
+@
+  
+  
   \end{enumerate}
 \item Consider testing the assumption $\sigma=1$. 
   \begin{enumerate}
   \item Define a test quantity $T(y^{rep},\theta)$ to test this assumption. Justify this choice.
+  
+    Let $T(y^{rep}, \theta) = (1+1/n)^{1/2}s$. This is the scale parameter of the posterior predictive distribution, if our predictive data has $T(y^rep, \theta)$ near $1$ then this will inform us that the assumption of $\sigma = 1$ is plausible.
+    
   \item What is the distribution for $p$?
   \item Describe and present results from a {\bf simple} simulation study to support your use
   of this test quantity and posterior predictive $p$-values to assess this assumption.
+  
+<<fig=TRUE>>=
+
+n <- 25
+ybar <- 0.25
+s <- 1.2
+
+
+test_quant2 <- function(yrep, n){ return(sqrt((1+1/n))*sqrt(var(yrep)))}
+
+tqs <- vector(length = 1000)
+for(i in 1:length(tqs)){
+  #sigma2 <- rinvchisq(1, 24, scale=1.2^2)
+  mu <- rnorm(1, ybar, 1 /25)
+  yrep <- rnorm(n, mu, 1)
+  tqs[i] <- test_quant2(yrep, n)
+}
+mean(tqs)
+empirical_test_quantity <- sqrt((1+1/n))*s
+length(which(tqs >= empirical_test_quantity)) / length(tqs) # p value
+
+hist(tqs) 
+abline(v=empirical_test_quantity)
+@
+
+
+
   \end{enumerate}
 \item Consider testing the independence assumption. 
   \begin{enumerate}
