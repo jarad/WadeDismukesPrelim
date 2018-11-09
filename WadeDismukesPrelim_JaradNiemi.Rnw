@@ -30,10 +30,21 @@ The intent of this question is to formalize the use of the term
 \item Probability interpretations:
   \begin{enumerate}
   \item State a Bayesian interpretation of probability.
+  	
+  	Probability is a numerical measure of uncertainty \citep{gelman2013bayesian}. 
+  	In other words, probability is a measure of our degree of belief that an outcome will occur, and our previous knowledge can influence our belief in how certain that we are in an outcome.
+  	
+  	
   \item State a frequentist interpretation of probability.
+  
+	Probability is the relative frequency of a particular outcome if we were to independently repeat the experiment producing that outcomes a large number of times \citep{gelman2013bayesian}.
+
   \item State any other interpretation(s) of probability that you know.
   If you prefer one of these interpretations, feel free to include it in the 
   interpretations below.
+  
+  The classical interpretation of probability, as defined by \citet{miller2014john}, applies when there are $N$ equally likely outcomes. The probability then is quantified as the number of times one of the possible outcomes could happen divided by the total possible outcomes.
+  
   \end{enumerate}
   
 \item The most common example of Bayes' Rule uses diagnostic testing, 
@@ -46,7 +57,16 @@ $D$ ($N$) indicate the individual has (does not have) the disease.
 
 \begin{enumerate}
 \item Provide a Bayesian interpretation of the terms $P(D)$ and $P(D|+)$.
-\item Provide a fequentist interpretation of the terms $P(D)$ and $P(D|+)$. 
+
+	$P(D)$ can be interpreted as our belief about the prevalence of the disease.
+	$P(D|+)$ can be interpreted as how certain we are a person has the disease given our knowledge of the disease's prevalence $P(D)$ and the data about how likely a positive result is that we have obtained in an experiment, through $P(+|D)$.
+
+\item Provide a frequentist interpretation of the terms $P(D)$ and $P(D|+)$. 
+
+	$P(D)$ is the proportion of people in the population who have the disease, and thus defines the probability that this randomly selected person will have this disease given the number of total people who have the disease in the population.
+	$P(D|+)$ is the relative frequency of people have obtained a positive result and have the disease.
+	 
+	
 \end{enumerate}
 
 \item Let's suppose we would like a conditional probability based on our test
@@ -55,7 +75,14 @@ patient being male.
 \begin{enumerate}
 \item Write the Bayes' Rule for the desired conditional probability $P(D|+,M)$
 where $M$ indicates the tested patient is male.
+
+	\[
+	 P(D | +, M) = \frac{P(+| D, M) P (D | M)}{P(+| M)}
+	\]
+
 \item Provide a Bayesian interpretation for $P(D|+,M)$.
+
+
 \item Provide a frequentist interpretation for $P(D|+,M)$.
 \end{enumerate}
 
@@ -78,6 +105,11 @@ We would really like to conditional on all of this information.
 % where $H$ indicates all of our information about this patient.
 \item Provide a Bayesian interpretation for $P(D|+,H)$. What issues do you see with this interpretation?
 \item Provide a frequentist interpretation for $P(D|+,H)$. What issues do you see with this interpretation?
+	
+	$P(D|+,H)$ can be interpreted as the relative frequency of people who have the disease and have that specific medical history and who received a positive result.
+	The problem with this interpretation is that as we specify more conditions this probability eventual will become about a single person.
+	In other words, we are no longer making a probability statement about a population (or subpopulation), but instead we are discussing a single individual.
+	
 \end{enumerate}
 
 \item Probability of gene trees, $P(G|S,\tau,\sigma,\lambda,\mu)$:
@@ -123,8 +155,33 @@ variance $\sigma^2$.
 
 \begin{enumerate}
 \item Given the data model and prior above, what is the joint posterior $p(\mu,\sigma^2|y)$?
+
+\begin{equation}
+	\begin{align}
+		p(\mu, \sigma^2 | y) & \propto \prod_{i=1}^{n} p(y_i | \mu, \sigma^2) \times p(\mu, \sigma^2) \\
+			& \propto \left(\frac{1}{\sigma^2}\right)^n exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - \mu)^2\right) \times \left(\frac{1}{\sigma^2}\right) \\
+			& \propto \left(\frac{1}{\sigma^2}\right)^{n+1} exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - \bar{y} + \bar{y} - \mu)^2\right) \\
+			& \propto \left(\frac{1}{\sigma^2}\right)^{n+1} exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - \bar{y})^2 + (\bar{y} - \mu)^2\right) \\
+			& \propto \left(\frac{1}{\sigma^2}\right)^{n+1} exp\left(-\frac{1}{2\sigma^2} ((n-1)s^2 + n(\bar{y} - \mu)^2\right) \\
+	\end{align}
+\end{equation} 
+
+
+
+
 \item Describe an algorithm to sample from $p(y^{rep}|y)$.
+
+To sample from $p(y^{rep} | y)$ the following steps are taken:
+
+	\begin{enumerate}
+		\item Sample $(\mu, \sigma^2)$ from $p(\mu, \sigma^2 | y)$ in part (a).
+		\item Using the sampled values of $(\mu, \sigma^2)$ sample $n$ values of $y^{rep}$ from $N(y^{rep}_i;\mu,\sigma^2)$	
+	\end{enumerate}
+ 
 \item Why is $T(y,\theta)$ a \emph{test quantity} and not a \emph{test statistic}?
+
+
+
 \item In order to test the assumption that $\mu=0$, you define 
 \[ T(y,\theta) = \frac{\overline{y}}{s/\sqrt{n}} \]
 where $\overline{y}$ and $s$ are the sample mean and sample standard deviation,
