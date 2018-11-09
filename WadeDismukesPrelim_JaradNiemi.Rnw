@@ -248,8 +248,8 @@ s <- 1.2
 
 test_quant <- function(yrep){
   ybar_rep <- mean(yrep)
-  ybar_s <- sqrt(var(yrep))
-  return(ybar_rep / (ybar_s / sqrt(n)))
+  yrep_s <- sqrt(var(yrep))
+  return(ybar_rep / (yrep_s / sqrt(n)))
 }
 
 tqs <- vector(length = 10000)
